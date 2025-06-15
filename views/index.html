@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入頁面</title>
+    <style>
+        @import url(login.css);
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2 class="login-title">會員登入</h2>
+        <form id="login-form">
+            <label for="email">電子郵件</label>
+            <input type="email" id="email" name="email" placeholder="請輸入電子郵件" required />
+
+
+            <label for="password">密碼</label>
+            <input type="password" id="password" name="password" placeholder="請輸入密碼" required />
+            <a href="register.html">註冊會員</a>
+
+            <br><br>
+            <button type="submit">登入</button>
+        </form>
+        <div class="message" id="msg"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('login-form');
+        const msg = document.getElementById('msg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = form.email.value.trim();
+            const password = form.password.value.trim();
+
+            if (!email || !password) {
+                msg.textContent = '請填寫所有欄位';
+                return;
+            }
+
+            try {
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    msg.style.color = 'green';
+                    msg.textContent = `登入成功，歡迎回來！`;
+                    window.location.href = '/home.html';
+                } else {
+                    msg.style.color = 'red';
+                    msg.textContent = data.message || '登入失敗，請確認帳號密碼';
+                }
+            } catch (error) {
+                msg.style.color = 'red';
+                msg.textContent = '伺服器錯誤，請稍後再試';
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

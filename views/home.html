@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>詐騙經歷分享首頁</title>
+    <style>
+        @import url(home.css);
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="userNameDisplay" style="position: fixed; top: 10px; right: 10px; font-weight: bold; color: #28a745; font-size: 23px;"></div>
+        <h1>詐騙經歷分享</h1>
+
+        <button onclick="location.href='phone-sms.html'">電話/簡訊詐騙</button>
+        <button onclick="location.href='account-hack.html'">帳號盜用詐騙</button>
+        <button onclick="location.href='love.html'">愛情與交友詐騙</button>
+        <button onclick="location.href='job.html'">求職詐騙</button>
+        <button onclick="location.href='atm.html'">ATM操作詐騙</button>
+        <button onclick="location.href='others.html'">其他詐騙</button>
+
+        <div class="btn-group">
+            <button class="a" onclick="location.href='add-posts.html'">新增留言</button>
+            <button class="a" onclick="location.href='my-posts.html'">我的留言</button>
+            <button class="a" id="logoutBtn">登出</button>
+        </div>
+    </div>
+
+
+
+    <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                const res = await fetch('/logout', { method: 'POST' }); // 用 POST 為主，視後端設計調整
+
+                if (res.ok) {
+                    // 登出成功，導回登入頁面
+                    window.location.href = '/index.html';
+                } else {
+                    alert('登出失敗，請稍後再試');
+                }
+            } catch (error) {
+                alert('伺服器錯誤，請稍後再試');
+            }
+        });
+
+        async function showUserName() {
+            try {
+                const res = await fetch('/api/current-user', { credentials: 'include' });
+                if (!res.ok) throw new Error('未登入');
+                const data = await res.json();
+                document.getElementById('userNameDisplay').textContent = `${data.username}`;
+            } catch (err) {
+                document.getElementById('userNameDisplay').textContent = '';
+                // 或者顯示「請先登入」
+            }
+        }
+
+        window.onload = showUserName;
+
+    </script>
+</body>
+
+</html>

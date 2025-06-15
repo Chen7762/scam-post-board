@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊帳號</title>
+    <style>
+        @import url(register.css);
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2 class="register-title">註冊帳號</h2>
+        <form id="register-form">
+            <label for="username">使用者名稱</label>
+            <input type="text" id="username" name="username" required />
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="phone">電話</label>
+            <input type="tel" id="phone" name="phone" required />
+
+            <label for="password">密碼</label>
+            <input type="password" id="password" name="password" required />
+
+            <label for="confirmPassword">確認密碼</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required />
+
+            <br><br>
+            <button type="submit">確認註冊</button>
+        </form>
+        <div class="message" id="msg"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('register-form');
+        const msg = document.getElementById('msg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = form.username.value.trim();
+            const email = form.email.value.trim();
+            const phone = form.phone.value.trim();
+            const password = form.password.value.trim();
+            const confirmPassword = form.confirmPassword.value.trim();
+
+            if (!username || !email || !phone || !password || !confirmPassword) {
+                msg.textContent = '請填寫所有欄位';
+                msg.style.color = 'red';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                msg.textContent = '密碼與確認密碼不一致';
+                msg.style.color = 'red';
+                return;
+            }
+
+            try {
+                const res = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, phone, password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert('註冊完成');
+                    window.location.href = '/index.html';
+                } else {
+                    msg.textContent = data.message || '註冊失敗';
+                    msg.style.color = 'red';
+                }
+            } catch (err) {
+                msg.textContent = '伺服器錯誤，請稍後再試';
+                msg.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

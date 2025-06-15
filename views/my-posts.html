@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的留言</title>
+    <style>
+        @import url(msg.css);
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='home.html'">← 返回</button>
+        <h1>我的留言</h1>
+    </div>
+
+    <div class="container" id="postsContainer"></div>
+
+    <script>
+        async function loadMyPosts() {
+            try {
+                const res = await fetch('/posts/my', {
+                    method: 'GET',
+                    credentials: 'include',
+                    cache: 'no-store'
+                });
+
+                if (!res.ok) throw new Error('無法取得我的留言');
+
+                const posts = await res.json();
+
+                const container = document.getElementById('postsContainer');
+                container.innerHTML = '';
+
+                if (posts.length === 0) {
+                    container.innerHTML = '<p style="text-align: center;">您目前沒有留言</p>';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const postDiv = document.createElement('div');
+                    postDiv.className = 'post';
+
+
+                    const categoryMap = {
+                        'phone-sms': '電話/簡訊詐騙',
+                        'account-hack': '帳號盜用詐騙',
+                        'love': '愛情與交友詐騙',
+                        'job': '求職詐騙',
+                        'atm': 'ATM操作詐騙',
+                        'others': '其他詐騙'
+                    };
+
+                    const categoryName = categoryMap[post.category] || '未知類別';
+
+                    postDiv.innerHTML = `
+                        <div class="category">${categoryName}</div>
+                        <div class="time">${post.created_at || ''}</div>
+                        <div class="content">${post.content}</div>
+                        <button class="delete-btn" onclick="deletePost(${post.id}, this)">刪除</button>
+                    `;
+                    container.appendChild(postDiv);
+                });
+
+            } catch (err) {
+                alert('載入留言失敗：' + err.message);
+            }
+        }
+
+        async function deletePost(postId, buttonElement) {
+  if (!confirm('確定要刪除這則留言嗎？')) return;
+
+  try {
+    const res = await fetch(`/posts/${postId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    if (!res.ok) throw new Error('刪除失敗');
+
+    // 刪除畫面上的留言區塊
+    const postDiv = buttonElement.closest('.post');
+    if (postDiv) postDiv.remove();
+
+  } catch (err) {
+    alert('無法刪除留言：' + err.message);
+  }
+}
+
+        window.onload = loadMyPosts;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+:root {
+    --beige: #f5f1ea;
+    --deep-blue: #1f2a44;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--beige);
+    font-family: "Noto Sans TC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--deep-blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: white;
+    padding: 40px 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(31, 42, 68, 0.1);
+    width: 90%;
+    max-width: 400px;
+    height: auto; 
+    margin: auto;
+}
+
+.login-title {
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--deep-blue);
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 24px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #3e4a72;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    background-color: var(--deep-blue);
+    color: var(--beige);
+    font-size: 18px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3e4a72;
+}
+
+.message {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+    color: red;
+    min-height: 18px;
+}
+
+a{
+    font-size: small;
+    color:rgb(97, 185, 240);
+}

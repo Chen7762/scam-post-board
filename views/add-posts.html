@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新增留言</title>
+  <style>
+    @import url(add-posts.css);
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='home.html'">← 返回</button>
+    <h1>新增詐騙留言</h1>
+  </div>
+
+  <form id="postForm">
+    <label for="category">詐騙類別</label>
+    <select id="category" required>
+      <option value="">-- 請選擇 --</option>
+      <option value="phone-sms">電話/簡訊詐騙</option>
+      <option value="account-hack">帳號盜用詐騙</option>
+      <option value="love">愛情與交友詐騙</option>
+      <option value="job">求職詐騙</option>
+      <option value="atm">ATM操作詐騙</option>
+      <option value="others">其他詐騙</option>
+    </select>
+
+    <label for="content">留言內容</label>
+    <textarea id="content" rows="20" required placeholder="請輸入您的經歷..."></textarea>
+
+    <button type="submit" class="submit-btn">送出</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('postForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const category = document.getElementById('category').value;
+      const content = document.getElementById('content').value;
+
+      if (!category || !content.trim()) {
+        alert("請選擇類別並填寫內容");
+        return;
+      }
+
+      const postData = {
+        category,
+        content
+      };
+
+      try {
+        const res = await fetch('/add-post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify(postData)
+        });
+
+        if (res.ok) {
+          alert("留言已成功送出！");
+          window.location.href = `${category}.html`;
+        } else {
+          alert("送出失敗，請稍後再試！");
+        }
+      } catch (err) {
+        alert("發生錯誤，請稍後再試！");
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

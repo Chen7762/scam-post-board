@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帳號盜用詐騙</title>
+    <style>
+        @import url(msg.css);
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='home.html'">← 返回</button>
+        <h1>帳號盜用詐騙留言</h1>
+    </div>
+
+    <div class="container" id="postsContainer"></div>
+
+    <script>
+        async function loadPosts() {
+            try {
+                const res = await fetch('/posts/account-hack');
+                if (!res.ok) throw new Error('無法取得留言');
+
+                const posts = await res.json();
+                const container = document.getElementById('postsContainer');
+
+                if (posts.length === 0) {
+                    container.innerHTML += '<p style="text-align: center;">目前沒有留言</p>';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const postDiv = document.createElement('div');
+                    postDiv.className = 'post';
+                    postDiv.innerHTML = `
+                        <div class="username">@${post.username || '匿名'}</div>
+                        <div class="time">${post.created_at || ''}</div>
+                        <div class="content">${post.content}</div>
+                    `;
+                    container.appendChild(postDiv);
+                });
+
+            } catch (err) {
+                alert('載入留言失敗：' + err.message);
+            }
+        }
+
+        window.onload = loadPosts;
+        
+    </script>
+</body>
+
+</html>
